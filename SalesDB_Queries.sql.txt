@@ -1,0 +1,88 @@
+SalesDB_Queries.sql
+
+
+-- Get Total Sales Revenue
+
+SELECT SUM(TotalAmount) AS TotalRevenue FROM Orders;
+
+--Find the Top 5 Best-Selling Products
+
+WITH ProductSales AS (  
+    SELECT  
+        p.ProductName,  
+        SUM(od.Quantity) AS TotalSold,  
+        RANK() OVER (ORDER BY SUM(od.Quantity) DESC) AS rnk  
+    FROM OrderDetails od  
+    JOIN Products p ON od.ProductID = p.ProductID  
+    GROUP BY p.ProductName  
+)  
+SELECT ProductName, TotalSold  
+FROM ProductSales  
+WHERE rnk <= 5;
+
+--Get the  top 5 Most Valuable Customers
+
+WITH CustomerSpending AS (  
+    SELECT  
+        c.FirstName,  
+        c.LastName,  
+        SUM(o.TotalAmount) AS TotalSpent,  
+        RANK() OVER (ORDER BY SUM(o.TotalAmount) DESC) AS rnk  
+    FROM Orders o  
+    JOIN Customers c ON o.CustomerID = c.CustomerID  
+    GROUP BY c.FirstName, c.LastName  
+)  
+SELECT FirstName, LastName, TotalSpent  
+FROM CustomerSpending  
+WHERE rnk <= 5;
+
+-- Count of Orders Per City
+
+SELECT c.City, COUNT(o.OrderID) AS TotalOrders  
+FROM Orders o  
+JOIN Customers c ON o.CustomerID = c.CustomerID  
+GROUP BY c.City  
+ORDER BY TotalOrders DESC;
+
+--Get Monthly Sales Report
+
+SELECT MONTH(OrderDate) AS Month, YEAR(OrderDate) AS Year, SUM(TotalAmount) AS MonthlySales  
+FROM Orders  
+GROUP BY YEAR(OrderDate), MONTH(OrderDate)  
+ORDER BY Year DESC, Month DESC;
+
+-- List All Orders with Customer Names and Total Amount
+
+SELECT o.OrderID, c.FirstName, c.LastName, o.TotalAmount, o.OrderDate  
+FROM Orders o  
+JOIN Customers c ON o.CustomerID = c.CustomerID  
+ORDER BY o.OrderDate DESC;
+
+-- Find Customers Who Placed More Than 2 Orders
+
+SELECT c.FirstName, c.LastName, COUNT(o.OrderID) AS OrderCount  
+FROM Orders o  
+JOIN Customers c ON o.CustomerID = c.CustomerID  
+GROUP BY c.FirstName, c.LastName  
+HAVING COUNT(o.OrderID) > 2  
+ORDER BY OrderCount DESC;
+
+--Find Products That Have Low Stock (Less than 10 Items)
+
+SELECT ProductName, StockQuantity  
+FROM Products  
+WHERE StockQuantity < 10  
+ORDER BY StockQuantity ASC;
+
+--Find Orders with More Than 1 Product
+
+SELECT o.OrderID, COUNT(od.ProductID) AS ProductCount  
+FROM Orders o  
+JOIN OrderDetails od ON o.OrderID = od.OrderID  
+GROUP BY o.OrderID  
+HAVING COUNT(od.ProductID) > 1;
+
+--Get Average Order Value
+
+SELECT AVG(TotalAmount) AS AvgOrderValue FROM Orders;
+

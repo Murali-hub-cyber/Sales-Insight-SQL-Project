@@ -1,0 +1,34 @@
+SalesDB_Inserts.sql
+
+
+INSERT INTO Customers (FirstName, LastName, Email, PhoneNumber, City)  
+VALUES  
+('Amit', 'Sharma', 'amit.sharma@email.com', '9876543210', 'Mumbai'),
+('Priya', 'Verma', 'priya.verma@email.com', '9765432109', 'Delhi'),
+('Rahul', 'Mishra', 'rahul.mishra@email.com', '9654321098', 'Bangalore'),
+('Sneha', 'Rao', 'sneha.rao@email.com', '9543210987', 'Hyderabad'),
+('Vikram', 'Singh', 'vikram.singh@email.com', '9432109876', 'Chennai');
+
+INSERT INTO Products (ProductName, Category, Price, StockQuantity)  
+VALUES  
+('Samsung Galaxy S24', 'Electronics', 74999.00, 50),
+('Mi Power Bank 20000mAh', 'Accessories', 2499.00, 100),
+('Lenovo ThinkPad E14', 'Laptops', 58999.00, 30),
+('Sony WH-1000XM5 Headphones', 'Accessories', 29999.00, 60),
+('Boat Airdopes 141', 'Accessories', 1499.00, 120);
+
+INSERT INTO Orders (CustomerID, TotalAmount)  
+VALUES  
+(1, 79999.00),  
+(2, 3499.00),  
+(3, 58999.00),  
+(4, 29999.00),  
+(5, 1499.00);
+
+INSERT INTO OrderDetails (OrderID, ProductID, Quantity, Subtotal)  
+VALUES  
+(1, 1, 1, 74999.00),  
+(2, 2, 1, 2499.00),  
+(3, 3, 1, 58999.00),  
+(4, 4, 1, 29999.00),  
+(5, 5, 1, 1499.00);
